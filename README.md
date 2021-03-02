@@ -49,3 +49,15 @@ From the graph you can see on a weekly scale some of the features follow a yearl
 The Dickey-Fuller test is used for time series data to rule out an overall trend in the data. In other words, we want our data overall stationary for better predictions. This can be tricky with weather data especially if there is an effect of climate change over the timespan. This trend could be apperant in monthly data not not so much in weekly or daily. Before performing the test on my weekly data I looked at the data over time grouped by day, week, month and year. The results are below:
 
 ![image](https://user-images.githubusercontent.com/51838209/109595760-5acc6e80-7ad2-11eb-95af-6cbfb66faae8.png)
+
+You can see from the graph that there is clearly an upwards trend of solar power but its harder to detect in the weekly or daily graphs. I am confident the statistical test will pass for the weekly or daily dataset but fail for monthly and yearly. To prove my hypothessis I ran the Dickey-Fuller test for monthly and weekly groupings. The results are as follows:
+
+### Dickey-Fuller Test Monthly Data
+![image](https://user-images.githubusercontent.com/51838209/109597188-f828a200-7ad4-11eb-8662-97aad73e0b54.png)
+
+As we can see from the P-vaule >= .05 that the data is determined to be non stationary and not the best aggregation for time-series predictions. Lets look at the weekly data next.
+
+### Dickey-Fuller Test Weekly Data
+![image](https://user-images.githubusercontent.com/51838209/109597268-23ab8c80-7ad5-11eb-92bd-7680cd018c95.png)
+
+Since the p-value of the Dickey-Fuller Test is <= 0.05 we reject the null hypothesis (H0), the data does not have a unit root and is stationary. This means predicting solar power a week aheads will give the best accuracy for our time-series predictions. We will proceed to the machine learning from here.
