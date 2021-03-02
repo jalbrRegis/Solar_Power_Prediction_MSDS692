@@ -34,3 +34,18 @@ In this chart you see another value GHI which is calculated from DNI and DHI. th
 
 ![image](https://user-images.githubusercontent.com/51838209/109594354-e0025400-7acf-11eb-9a8e-28553f102ae0.png)
 
+Confirmed by our daily chart GHI has the highiest correlation with Solar Power (b'generation') with each of the input values to the simulator having some effect on the power generation it seemed they would all be valid in model predicting solar power. Common sense would say if they are an input to the simulator the are important to the value it produces.
+
+## Time-Series Data Discovery
+
+For our project we are trying top predict future solar power production so not only do we need to know what features to use but what time scale. I started out investingating weekly averages as they relate to total solar power and generated a graph to view the weekly averages over a span of 5 years. The result of the graph is as follows:
+
+![image](https://user-images.githubusercontent.com/51838209/109595182-4045c580-7ad1-11eb-9f0f-55b5bcbfb3bd.png)
+
+From the graph you can see on a weekly scale some of the features follow a yearly trend close than others. Temporature and DHI you can see the values vary by month in a more predicable way then the other variables. Still, it is the power generation that we are interested in and since the other values are inputs to the solar power simulator perhaps a univarate time-series should be tried first as its the simplest solution. First however, we must determine if the weekly values are stationary if they are to be used in a time series prediction. That brings us to the dickey-fuller test.
+
+## Test for Stationary Data
+
+The Dickey-Fuller test is used for time series data to rule out an overall trend in the data. In other words, we want our data overall stationary for better predictions. This can be tricky with weather data especially if there is an effect of climate change over the timespan. This trend could be apperant in monthly data not not so much in weekly or daily. Before performing the test on my weekly data I looked at the data over time grouped by day, week, month and year. The results are below:
+
+![image](https://user-images.githubusercontent.com/51838209/109595760-5acc6e80-7ad2-11eb-95af-6cbfb66faae8.png)
