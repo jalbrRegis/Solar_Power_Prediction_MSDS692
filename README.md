@@ -61,3 +61,16 @@ As we can see from the P-vaule >= .05 that the data is determined to be non stat
 ![image](https://user-images.githubusercontent.com/51838209/109597268-23ab8c80-7ad5-11eb-92bd-7680cd018c95.png)
 
 Since the p-value of the Dickey-Fuller Test is <= 0.05 we reject the null hypothesis (H0), the data does not have a unit root and is stationary. This means predicting solar power a week aheads will give the best accuracy for our time-series predictions. We will proceed to the machine learning from here.
+
+## Time_series Univariate Power Prediction using LSTMs
+
+For our Time-Series predictions I will be training an LSTM network. We will be performing a univariate prediction, that is, using past solar power to predict future solar power. As the Dickey-Fuller test indicated we will have the best results predicting by week, one week a head using a lookback of 12 weeks. The general approach for this LSTM is having a faeture value for each week of the lookback period. Therefore, we will have 12 features representing each of the past weeks to preidict the 13th week. I thought a 12 week lookback would be best as it takes into account a full season or the changing of the seasons and seemed to perfomr the best. For the data preprocessing the dataframs were transformed into numpy arrays then reshaped into a 3 dimensional input for the LSTM. Our training data consisted of 238 weeks and our validation / test data consisted of 50 weeks each with 12 months of lookback. Our Y values are the 13th week.
+
+### The LSTM Network
+
+For this project I chose an LSTM netwrok because of its documented perfomrance with univariate time-series predictions. I tried mutiple netwrok layers and a different amount of nodes untill I found a configuration that performed the best. Dropout between each layer was added to reduice overfitting. My final netowrk configuration is as follows:
+
+![image](https://user-images.githubusercontent.com/51838209/109599965-7edf7e00-7ad9-11eb-88e6-abb60c4a3313.png)
+
+### Monitoring Loss
+
