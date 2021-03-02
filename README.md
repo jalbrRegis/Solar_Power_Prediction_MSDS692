@@ -16,8 +16,14 @@ Most of these packages are standard for data science including pandas, numpy, ke
 ## The Data
 The data used from this project is from the National Solar Radiation Database. It is downloaded with an API and contains yearly data on solar radion plus other meteroloical data. Geospatial data is also provided so a location can be selected and all relivant data can be downloaded. For this project I chose a location in Colorado, but any location can be chosen and the model retrained to predict solar output. The API limits the amount of data you can pull at a time so its best to do one location at a time. Also, pulling historical data can time out as such I found that pulling 5 years at a time was the thr max allowable at a time. The following shows an example of the meta data containing geospatial information as well as a sample of the data pulled:
 
-# Meta Data
-![image](https://user-images.githubusercontent.com/51838209/109591151-41bfbf80-7aca-11eb-9134-c7815e215fbf.png)
+### Meta Data
+![image](https://user-images.githubusercontent.com/51838209/109591644-1f7a7180-7acb-11eb-9abf-d7a4130a50e7.png)
 
-# Solar Radiation Data
+### Solar Radiation Data
+![image](https://user-images.githubusercontent.com/51838209/109591570-f9ed6800-7aca-11eb-8d10-6d8af97712c0.png)
+
+## The Solar Power Simulator
+To convert the solar radion inputs to solar power a simulator package by the NREL is used. This solar package takes in geospatial data combinded with DNI, DHI, Temperature, and wind to simulate solar power produced in kilo-watts. Other inputs to the simulator are the type of solar panel, tilt, system capacity, ground coverage etc. For this project I used settings to represent panels afixed to a residential roof but all that could be changed in the simulator.
+
+## EDA Data Discovery
 
