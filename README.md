@@ -4,17 +4,16 @@
 ### March 3, 2021
 
 ## Introduction
-Solar power has long been a source for clean energy for residential and commercial properties but weighing the high installation cost against long term gains can be speculative and cumbersome. For this project weather data and solar data will be used combined with locational data to predict solar power generation. One can use the application to select a prospective area for solar installation and then predict how much energy can be produced. Homeowners and businesses can use the application to determine their brake even point and can use the predictions to understand how much energy they can expect from solar. With many corporations having “Go Green” initiatives it can also assist in estimating the cost of going carbon neutral. In all, estimating solar output would be helpful for anyone looking to reduce their carbon footprint but also ensuring energy and cost needs will be met in the future. 
+Solar power has long been a source for clean energy for residential and commercial properties but weighing the high installation cost against long term gains can be speculative and cumbersome. For this project weather data and solar data will be used combined with locational data to predict solar power generation. One can use the application to select a prospective area for solar installation and then predict how much energy can be produced a week ahead of time. Homeowners and businesses can use the application to determine the cost associated with pulling power off the grid if the next weeks solar power cannot meet demand. With many corporations having “Go Green” initiatives it can also assist in evaluating the cost of going carbon neutral. In all, estimating solar output would be helpful for anyone looking to reduce their carbon footprint but also ensuring energy and cost needs will be met in the near future. 
 
 ## Environment Setup
-For this project I used miniconda to manage my environment. Since this project was done in google Colab I installed everything with Bash and pip commands. The main reason this was done is to install the solar simulator package. The default Colab environment does not have the correct version of python to work with the solar simulator package and requires other packages to work correctly.
+For this project I used miniconda to manage my environment. Since this project was done in google Colab I installed everything with Bash and pip commands. The main reason this was done was to accommodate the requirements of the solar simulator package. The default Colab environment does not have the correct version of python to work with the solar simulator package and requires other packages to work correctly.
 
 ## Packages
-
-Most of these packages are standard for data science including pandas, numpy, keras, sklearn, and tensorflow. Other packages are added in for statistical operations. The PySAM package is maintained by the (NREL) National Solar Radiation Database. This is package that will convert the radiation data into solar energy data.
+Most of the packages used are standard for data science including pandas, numpy, keras, sklearn, and tensorflow. Other packages are added in for statistical operations. The PySAM package is maintained by the (NREL) National Solar Radiation Database. This is package that will convert the radiation data into solar energy data.
 
 ## The Data
-The data used from this project is from the National Solar Radiation Database. It is downloaded with an API and contains yearly data on solar radiation plus other meteorological data. Geospatial data is also provided so a location can be selected, and all relevant data can be downloaded. For this project I chose a location in Colorado, but any location can be chosen, and the model retrained to predict solar output. The API limits the amount of data you can pull at a time so it’s best to do one location at a time. Also, pulling historical data can time out as such I found that pulling 5 years at a time was the max allowable at a time. The following shows an example of the meta data containing geospatial information as well as a sample of the data pulled:
+The data used from this project is from the National Solar Radiation Database. It is downloaded with an API and contains yearly data on solar radiation plus other meteorological data. Geospatial data is also provided so a location can be selected, and all relevant data can be downloaded. For this project I chose a location in Colorado, but any location can be chosen. A different location would require the model to be retrained to predict solar output. The API limits the amount of data you can pull at a time so it’s best to do one location at a time. Also, pulling historical data can time out. I found that pulling 5 years at a time was the max allowable. The following shows an example of the meta data containing geospatial information as well as a sample of the data pulled:
 
 ### Meta Data
 ![image](https://user-images.githubusercontent.com/51838209/109591644-1f7a7180-7acb-11eb-9abf-d7a4130a50e7.png)
@@ -23,26 +22,26 @@ The data used from this project is from the National Solar Radiation Database. I
 ![image](https://user-images.githubusercontent.com/51838209/109591570-f9ed6800-7aca-11eb-8d10-6d8af97712c0.png)
 
 ## The Solar Power Simulator
-To convert the solar radiation inputs to solar power a simulator package by the NREL is used. This solar package takes in geospatial data combined with DNI, DHI, Temperature, and wind to simulate solar power produced in kilo-watts. Other inputs to the simulator are the type of solar panel, tilt, system capacity, ground coverage etc. For this project I used settings to represent panels affixed to a residential roof but all that could be changed in the simulator.
+To convert the solar radiation inputs to solar power a simulator package by the NREL is used. This solar package takes in geospatial data combined with DNI, DHI, Temperature, and wind to simulate solar power produced in kilowatts. Other inputs to the simulator are the type of solar panel, tilt, system capacity, ground coverage etc. For this project I used settings to represent panels affixed to a residential roof, but this could be altered in the simulator.
 
 ## EDA Data Discovery
-For identifying the features, I was interested in the selection process was straightforward. The simulator designated the inputs of DNI, DHI, Temperature, and Wind Speed for the location selected so I was going to investigate these features and how they relate to each other and to the solar power they generate. I first inspected the values visually by plotting a sample day of power generation. The following graph shows what a typical day on August 5th, 2013 looks like:
+For identifying the features the selection process was straightforward. The simulator designated the inputs of DNI, DHI, Temperature, and Wind Speed for the location selected so I was going to investigate these features and how they relate to each other and to the solar power they generate. I first inspected the values visually by plotting a sample day of power generation. The following graph shows what a typical day on August 5th, 2013 looks like:
 
 ![image](https://user-images.githubusercontent.com/51838209/109593982-39b64e80-7acf-11eb-8978-5140d9a40c73.png)
 
-In this chart you see another value GHI which is calculated from DNI and DHI. the solid red line indicates the power generated by our simulated solar array. As you can see it follows GHI closely but the relationship to the other values is not quite apparent. DNI seems to follow power generation the closest as a non-derived value. To see these features relationship at a more quantifiable level I constructed a correlation matrix of values show in the following image:
+In this chart you see another value GHI which is calculated from DNI and DHI. the solid red line indicates the power generated by our simulated solar array. As you can see it follows GHI closely but the relationship to the other values is not quite apparent. DNI seems to follow power generation the closest as a non-derived value. To see these features relationship at a more quantifiable level I constructed a correlation matrix of values shown in the following image:
 
 ![image](https://user-images.githubusercontent.com/51838209/109594354-e0025400-7acf-11eb-9a8e-28553f102ae0.png)
 
-Confirmed by our daily chart GHI has the highest correlation with Solar Power (b'generation') with each of the input values to the simulator having some effect on the power generation it seemed they would all be valid in model predicting solar power. Common sense would say if they were an input to the simulator they are important to the value it produces.
+Confirmed by our daily chart, GHI has the highest correlation with Solar Power (b'generation') with each of the input values to the simulator having some effect on the power generation. It seemed they would all be valid in model predicting solar power. Common sense would say if they were an input to the simulator they are important to the value it produces.
 
 ## Time-Series Data Discovery
 
-For our project we are trying to predict future solar power production so not only do we need to know what features to use but what time scale. I started out investigating weekly averages as they relate to total solar power and generated a graph to view the weekly averages over a span of 5 years. The result of the graph is as follows:
+For our project we are trying to predict future solar power production so not only do we need to know what features to use but also what time scale. I started out investigating weekly averages as they relate to total solar power and generated a graph to view the weekly averages over a span of 5 years. The result of the graph is as follows:
 
 ![image](https://user-images.githubusercontent.com/51838209/109595182-4045c580-7ad1-11eb-9f0f-55b5bcbfb3bd.png)
 
-From the graph you can see on a weekly scale some of the features follow a yearly trend close than others. Temperature and DHI you can see the values vary by month in a more predicable way then the other variables. Still, it is the power generation that we are interested in and since the other values are inputs to the solar power simulator perhaps a univariate time-series should be tried first as its the simplest solution. First however, we must determine if the weekly values are stationary if they are to be used in a time series prediction. That brings us to the dickey-fuller test.
+From the graph you can see on a weekly scale some of the features follow a yearly trend close than others. Temperature and DHI you can see the values vary by month in a more predicable way then the other variables. Still, it is the power generation we are interested in and since the other values are inputs to the solar power simulator perhaps a univariate time-series should be tried first as its the simplest solution. First however, we must determine if the weekly values are stationary if they are to be used in a time series prediction. That brings us to the dickey-fuller test.
 
 ## Test for Stationary Data
 
@@ -55,7 +54,7 @@ You can see from the graph that there is clearly an upwards trend of solar power
 ### Dickey-Fuller Test Monthly Data
 ![image](https://user-images.githubusercontent.com/51838209/109597188-f828a200-7ad4-11eb-8662-97aad73e0b54.png)
 
-As we can see from the P-value >= .05 that the data is determined to be non-stationary and not the best aggregation for time-series predictions. Let us look at the weekly data next.
+As we can see from the P-value >= .05 that the data is determined to be non-stationary and not the best grouping for time-series predictions. Let us look at the weekly data next.
 
 ### Dickey-Fuller Test Weekly Data
 ![image](https://user-images.githubusercontent.com/51838209/109597268-23ab8c80-7ad5-11eb-92bd-7680cd018c95.png)
@@ -64,7 +63,7 @@ Since the p-value of the Dickey-Fuller Test is <= 0.05 we reject the null hypoth
 
 ## Timeseries Univariate Power Prediction using LSTMs
 
-For our Time-Series predictions I will be training an LSTM network. We will be performing a univariate prediction, that is, using past solar power to predict future solar power. As the Dickey-Fuller test indicated we will have the best results predicting by week, one week a head using a lookback of 12 weeks. The general approach for this LSTM is having a feature value for each week of the lookback period. Therefore, we will have 12 features representing each of the past weeks to predict the 13th week. I thought a 12-week lookback would be best as it considers a full season or the changing of the seasons and seemed to perform the best. For the data preprocessing the data frames were transformed into NumPy arrays then reshaped into a 3-dimensional input for the LSTM. Our training data consisted of 238 weeks and our validation / test data consisted of 50 weeks each with 12 months of lookback. Our Y values are the 13th week.
+For our Time-Series predictions I will be training an LSTM network. We will be performing a univariate prediction, that is, using past solar power to predict future solar power. As the Dickey-Fuller test indicated we will have the best results predicting by week, one week a head using a lookback of 12 weeks. The general approach for this LSTM is having a feature value for each week of the lookback period. Therefore, we will have 12 features representing each of the past weeks to predict the 13th week. I thought a 12-week lookback would be best as it considers a full seasons. Also, it seemed to perform the best. For the preprocessing of the input data, Pandas dataframes were transformed into NumPy arrays then reshaped into a 3-dimensional input for the LSTM. Our training data consisted of 238 weeks and our validation / test data consisted of 50 weeks each with 12 months of lookback. Our Y values are the 13th week.
 
 ### The LSTM Network
 
@@ -73,28 +72,28 @@ For this project I chose an LSTM network because of its documented performance w
 ![image](https://user-images.githubusercontent.com/51838209/109599965-7edf7e00-7ad9-11eb-88e6-abb60c4a3313.png)
 
 ### Monitoring Loss
-For Loss I chose to monitor the Root Mean Square Error. In the following chart you can see the loss vs validation loss. Both values nearly converge for the model showing minimal overfitting:
+For loss I chose to monitor the Root Mean Square Error. In the following chart you can see the loss vs validation loss. Both values nearly converge for the model showing minimal overfitting:
 
 ![image](https://user-images.githubusercontent.com/51838209/109747228-f4a82000-7b93-11eb-9cef-997b1f17571b.png)
 
 ### Accuracy
-I computed both the MAE and RMSE for accuracy, what is curious is for many different models the test data performed better than the training data. This can point back to the dataset being time ordered and the later weeks being used to test could have less fluctuation than the training set. Also, the training set is a bigger dataset so more outliers could affect the model’s volatility. For my last couple of runs adding more layers seemed to right the ship in terms of the training data outperforming the validation data, this is what one would expect. From a practical standpoint, being off by plus or minus 22-28 kW out of 174kW weekly average is not bad. Additionally, I plotted actuals vs prediction for the Solar Power Predictions. Below is a chart of the results:
+I computed both the MAE and RMSE for accuracy, what is curious is for many different models the test data performed better than the training data. This can point back to the dataset being time ordered and the later weeks being used to test could have less fluctuation than the training set. Also, the training set is a bigger dataset so more outliers could affect the model’s volatility. For my last couple of runs adding more layers seemed to "right the ship" in terms of the training data outperforming the validation data; this is what one would expect. From a practical standpoint, with an error of plus or minus 22-28 kW out of 174kW weekly average would be acceptable since more solar panels can always be installed to account for the error. Additionally, I plotted actuals vs prediction for the Solar Power predictions. Below is a chart of the results:
 
 ![image](https://user-images.githubusercontent.com/51838209/109750587-f2e15b00-7b99-11eb-86c0-c391feb54add.png)
 
-The predictions follow the general trend but have trouble with the spikes (low or high). It seems quick drastic changes in conditions give the model trouble. For a univariate prediction however it seems to do a nice job and will give the users an indication of how much power they will generate in the next week.
+The predictions follow the general trend but has trouble with the spikes (low or high). It seems quick drastic changes in conditions give the model trouble. For a univariate prediction however it seems to do a nice job and will give the users an indication of how much power they will generate in the next week.
 
 ### Manual Predictions
 Using the weeks of 2019-10-06 to 2019-12-22 to predict 2019-12-29 we got a prediction of 124.9 kW with an actual of 113.92 kW. A user of the system would be able to consider each prediction and if the value is too low for their needs the number of panels installed could be increased. At a certain level the user could maintain a number of panels that exceeded the error calculations and be sure they could survive on solar power alone.
 
-Result:
+**Result:**
 124.788 vs b'generation'Actual: 113.923968
 
 ## Conclusion
-The entirety of the project does give the user an idea of their Power Generation for the Following week. The Project has numerous inputs that can be changed based on location, Solar Panel Type, and time of year to predict the next week’s output. In terms of meeting requirements for Power a user could use this application to assess weekly power production and install panels that would meet the minimum predicted requirements for power needs.
+The entirety of the project does give the user an idea of their Power Generation for the following week and the earlier data analysis could give a good indication of seasonal power generation. The Project has numerous inputs that can be changed based on location, Solar Panel Type, and time of year to predict the next week’s output. In terms of meeting requirements for Power a user could use this application to assess weekly power production and install panels that would meet the minimum predicted requirements for power needs.
 
 ## Future Work
-To increase the model’s accuracy a multivariate time series prediction using weather forecasts could increase the model’s accuracy, so it is not predicting using seasonal fluctuations alone. This would also increase the model’s complexity and make it more reliant on predicted values rather than actuals for predictions.
+To increase the model’s accuracy a multivariate time series prediction using weather forecasts could be used so it is not predicting using seasonal fluctuations alone. This would also increase the model’s complexity and make it more reliant on predicted values (forecasts) rather than actuals for predictions.
 
 ### Sources:
 
