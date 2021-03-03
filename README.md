@@ -74,6 +74,7 @@ For this project I chose an LSTM network because of its documented performance w
 
 ### Monitoring Loss
 For Loss I chose to monitor the Root Mean Square Error. In the following chart you can see the loss vs validation loss. Both values nearly converge for the model showing minimal overfitting:
+
 ![image](https://user-images.githubusercontent.com/51838209/109747228-f4a82000-7b93-11eb-9cef-997b1f17571b.png)
 
 ### Accuracy
